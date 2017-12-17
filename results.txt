@@ -1,0 +1,8 @@
+Result 1:
+Dataset Used: MIT CBCL
+Algorithm used: ConvNet
+Program file:
+Test Accuracy:
+Training Accuracy:
+Imporvements:
+Model saved as: 
