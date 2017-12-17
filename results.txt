@@ -1,6 +1,6 @@
 Result 1:
 Dataset Used: MIT CBCL
-Algorithm used: ConvNet (2 conv layers: W1 [4,4,3,8], W2 [2,2,8,16])
+Algorithm used: ConvNet (2 conv layers: W1 [4,4,1,8], W2 [2,2,8,16])
 Program file:
 Test Accuracy:
 Training Accuracy:
