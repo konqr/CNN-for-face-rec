@@ -1,8 +1,21 @@
 Result 1:
 Dataset Used: MIT CBCL
-Algorithm used: ConvNet (2 conv layers: W1 [4,4,1,8], W2 [2,2,8,16])
-Program file:
-Test Accuracy:
-Training Accuracy:
-Imporvements:
-Model saved as: 
+Algorithm used: ConvNet (2 conv layers: W1 [4,4,1,8], W2 [2,2,8,16], 50 epochs, 32 mini batch)
+Program file: ConvNet.py
+
+Cost after epoch 0: 0.637132
+Cost after epoch 5: 0.000197
+Cost after epoch 10: 0.000053
+Cost after epoch 15: 0.000022
+Cost after epoch 20: 0.000012
+Cost after epoch 25: 0.000007
+Cost after epoch 30: 0.000004
+Cost after epoch 35: 0.000003
+Cost after epoch 40: 0.000002
+Cost after epoch 45: 0.000001
+Tensor("Mean_1:0", shape=(), dtype=float32)
+Train Accuracy: 1.0
+Test Accuracy: 0.100198
+
+Improvements: horrendously overfitting
+Model saved as: not saving
