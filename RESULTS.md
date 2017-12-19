@@ -41,3 +41,24 @@ Accuracy: 1.0
 
 Improvements: None - Perfect Accuracy, try with more layers for better deconvolutional understanding
 Parameters saved as: Result2/params.pckl
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+###Result 3:
+Dataset Used: Yale B, randomized 50% holdout validation
+Algorithm used: ConvNet (2 conv layers: W1 [3,3,1,8], W2 [3,3,8,16], 50 epochs, 32 mini batch) 
+Program file: Result3/ConvNet.py
+
+Cost after epoch 0: 0.334250
+Cost after epoch 5: 0.000231
+Cost after epoch 10: 0.000057
+Cost after epoch 15: 0.000033
+Cost after epoch 20: 0.000015
+Cost after epoch 25: 0.000007
+Cost after epoch 30: 0.000005
+Cost after epoch 35: 0.000004
+Cost after epoch 40: 0.000003
+Cost after epoch 45: 0.000002
+Tensor("Mean_1:0", shape=(), dtype=float32)
+Accuracy: 0.999321
+
+Improvements: None - Close to Perfect Accuracy, try with more layers for better deconvolutional understanding
+Parameters saved as: Result3/params.pckl
