@@ -1,0 +1,278 @@
+import math
+import numpy as np
+#import h5py
+import matplotlib.pyplot as plt
+import scipy
+from PIL import Image
+from scipy import ndimage
+import tensorflow as tf
+from tensorflow.python.framework import ops
+from cnn_utils import *
+import pickle
+
+#X_train_orig, Y_train_orig, X_test_orig, Y_test_orig, classes = load_dataset()
+X_train_orig = np.zeros((5850,266,200))
+f = open('store.pckl', 'rb')
+# pickle.dump(X_train_orig[0:1000,:,:], f)
+# pickle.dump(X_train_orig[1001:2000,:,:], f)
+# pickle.dump(X_train_orig[2001:3000,:,:], f)
+# pickle.dump(X_train_orig[3001:4000,:,:], f)
+# pickle.dump(X_train_orig[4001:5000,:,:], f)
+# pickle.dump(X_train_orig[5001:len(X_train_orig),:,:], f)
+# pickle.dump(Y_train_orig,f)
+# pickle.dump(classes, f)
+X_train_orig[0:1000,:,:]=pickle.load(f)
+X_train_orig[1001:2000,:,:]=pickle.load(f)
+X_train_orig[2001:3000,:,:]=pickle.load(f)
+X_train_orig[3001:4000,:,:]=pickle.load(f)
+X_train_orig[4001:5000,:,:]=pickle.load(f)
+X_train_orig[5001:5850,:,:]=pickle.load(f)
+Y_train_orig=pickle.load(f)
+classes=pickle.load(f)
+f.close()
+
+X_train = X_train_orig/255.
+#X_test = X_test_orig/255.
+Y_train = convert_to_one_hot((Y_train_orig.astype(int)), 10).T
+#Y_test = convert_to_one_hot(Y_test_orig.astype(int), 10).T
+
+def create_placeholders(n_H0, n_W0, n_C0, n_y):
+    """
+    Creates the placeholders for the tensorflow session.
+    
+    Arguments:
+    n_H0 -- scalar, height of an input image
+    n_W0 -- scalar, width of an input image
+    n_C0 -- scalar, number of channels of the input
+    n_y -- scalar, number of classes
+        
+    Returns:
+    X -- placeholder for the data input, of shape [None, n_H0, n_W0, n_C0] and dtype "float"
+    Y -- placeholder for the input labels, of shape [None, n_y] and dtype "float"
+    """
+
+    ### START CODE HERE ### (≈2 lines)
+    X = tf.placeholder("float", [None, n_H0, n_W0, n_C0], name="X")
+    Y = tf.placeholder("float", [None, n_y], name="Y")
+    ### END CODE HERE ###
+    
+    return X, Y
+
+def initialize_parameters():
+    """
+    Initializes weight parameters to build a neural network with tensorflow. The shapes are:
+    Returns:
+    parameters -- a dictionary of tensors containing W1, W2
+    """    
+    ### START CODE HERE ### (approx. 2 lines of code)
+    W1 = tf.get_variable("W1", [3,3,1,8], initializer = tf.contrib.layers.xavier_initializer())
+    W2 = tf.get_variable("W2", [5,5,8,16], initializer = tf.contrib.layers.xavier_initializer())
+    W3 = tf.get_variable("W3", [5,5,16,32], initializer = tf.contrib.layers.xavier_initializer())
+    W4 = tf.get_variable("W4", [3,3,32,32], initializer = tf.contrib.layers.xavier_initializer())
+    ### END CODE HERE ###
+
+    parameters = {"W1": W1,
+                  "W2": W2,
+                  "W3": W3,
+                  "W4": W4}
+    
+    return parameters
+    
+def forward_propagation(X, parameters):
+    """
+    Implements the forward propagation for the model:
+    CONV2D -> RELU -> MAXPOOL -> CONV2D -> RELU -> MAXPOOL -> FLATTEN -> FULLYCONNECTED
+    
+    Arguments:
+    X -- input dataset placeholder, of shape (input size, number of examples)
+    parameters -- python dictionary containing your parameters "W1", "W2"
+                  the shapes are given in initialize_parameters
+
+    Returns:
+    Z3 -- the output of the last LINEAR unit
+    """
+    
+    # Retrieve the parameters from the dictionary "parameters" 
+    W1 = parameters['W1']
+    W2 = parameters['W2']
+    W3 = parameters['W3']
+    W4 = parameters['W4']
+    ### START CODE HERE ###
+    # CONV2D: stride of 1, padding 'SAME'
+    Z1 = tf.nn.conv2d(X,W1,strides = [1,1,1,1], padding = 'SAME')
+    # RELU
+    A1 = tf.nn.relu(Z1)
+    # MAXPOOL: window 8x8, stride 8, padding 'SAME'
+    P1 = tf.nn.max_pool(A1, ksize = [1,8,8,1], strides = [1,8,8,1], padding = 'SAME' )
+    # CONV2D: filters W2, stride 1, padding 'SAME'
+    Z2 = tf.nn.conv2d(P1,W2,strides = [1,1,1,1], padding = 'SAME')
+    # RELU
+    A2 = tf.nn.relu(Z2)
+    # MAXPOOL: window 4x4, stride 4, padding 'SAME'
+    P2 = tf.nn.max_pool(A2, ksize = [1,4,4,1], strides = [1,4,4,1], padding = 'SAME')
+    # CONV2D: filters W2, stride 1, padding 'SAME'
+    Z3 = tf.nn.conv2d(P2,W3,strides = [1,1,1,1], padding = 'SAME')
+    # RELU
+    A3 = tf.nn.relu(Z3)
+    # MAXPOOL: window 4x4, stride 4, padding 'SAME'
+    P3 = tf.nn.max_pool(A3, ksize = [1,4,4,1], strides = [1,4,4,1], padding = 'SAME')
+    # CONV2D: filters W2, stride 1, padding 'SAME'
+    Z4 = tf.nn.conv2d(P3,W4,strides = [1,1,1,1], padding = 'SAME')
+    # RELU
+    A4 = tf.nn.relu(Z4)
+    # MAXPOOL: window 4x4, stride 4, padding 'SAME'
+    P4 = tf.nn.max_pool(A4, ksize = [1,4,4,1], strides = [1,4,4,1], padding = 'SAME')
+    # FLATTEN
+    P4 = tf.contrib.layers.flatten(P4)
+    #fully connected layer with dropout
+    dense = tf.layers.dense(inputs=P4, units=1024, activation=tf.nn.relu)
+    dropout = tf.layers.dropout(inputs=dense, rate=0.4, training=True)
+    # FULLY-CONNECTED without non-linear activation function (not not call softmax).
+    # 6 neurons in output layer. Hint: one of the arguments should be "activation_fn=None" 
+    Z5 = tf.layers.dense(inputs=dense, units=10)
+    ### END CODE HERE ###
+
+    return Z5
+    
+def compute_cost(Z5, Y):
+    """
+    Computes the cost
+    
+    Arguments:
+    Z3 -- output of forward propagation (output of the last LINEAR unit), of shape (6, number of examples)
+    Y -- "true" labels vector placeholder, same shape as Z3
+    
+    Returns:
+    cost - Tensor of the cost function
+    """
+    
+    ### START CODE HERE ### (1 line of code)
+    cost = tf.reduce_mean(tf.nn.softmax_cross_entropy_with_logits(logits=Z5, labels=Y))
+    ### END CODE HERE ###
+    
+    return cost
+
+def model(X_train, Y_train, holdout, learning_rate = 0.009,
+          num_epochs = 50, minibatch_size = 25, print_cost = True):
+    """
+    Implements a three-layer ConvNet in Tensorflow:
+    CONV2D -> RELU -> MAXPOOL -> CONV2D -> RELU -> MAXPOOL -> FLATTEN -> FULLYCONNECTED
+    
+    Arguments:
+    X_train -- training set, of shape (None, 64, 64, 3)
+    Y_train -- test set, of shape (None, n_y = 6)
+    X_test -- training set, of shape (None, 64, 64, 3)
+    Y_test -- test set, of shape (None, n_y = 6)
+    learning_rate -- learning rate of the optimization
+    num_epochs -- number of epochs of the optimization loop
+    minibatch_size -- size of a minibatch
+    print_cost -- True to print the cost every 100 epochs
+    
+    Returns:
+    train_accuracy -- real number, accuracy on the train set (X_train)
+    test_accuracy -- real number, testing accuracy on the test set (X_test)
+    parameters -- parameters learnt by the model. They can then be used to predict.
+    """
+    
+    ops.reset_default_graph()                         # to be able to rerun the model without overwriting tf variables
+    #tf.set_random_seed(1)                             # to keep results consistent (tensorflow seed)
+    #seed = 3                                          # to keep results consistent (numpy seed)
+    (m, n_H0, n_W0) = X_train.shape
+    n_C0 = 1
+    n_y = Y_train.shape[1]                            
+    costs = []                                        # To keep track of the cost
+    
+    # Create Placeholders of the correct shape
+    ### START CODE HERE ### (1 line)
+    X, Y = create_placeholders(n_H0, n_W0, n_C0, n_y)
+    ### END CODE HERE ###
+
+    # Initialize parameters
+    ### START CODE HERE ### (1 line)
+    parameters = initialize_parameters()
+    ### END CODE HERE ###
+    
+    # Forward propagation: Build the forward propagation in the tensorflow graph
+    ### START CODE HERE ### (1 line)
+    Z5 = forward_propagation(X, parameters)
+    ### END CODE HERE ###
+    
+    # Cost function: Add cost function to tensorflow graph
+    ### START CODE HERE ### (1 line)
+    cost = compute_cost(Z5, Y)
+    ### END CODE HERE ###
+    
+    # Backpropagation: Define the tensorflow optimizer. Use an AdamOptimizer that minimizes the cost.
+    ### START CODE HERE ### (1 line)
+    optimizer = tf.train.AdamOptimizer(learning_rate).minimize(cost)
+    ### END CODE HERE ###
+    
+    # Initialize all the variables globally
+    init = tf.global_variables_initializer()
+    config = tf.ConfigProto()
+    config.gpu_options.allow_growth = True
+    # Start the session to compute the tensorflow graph
+    with tf.Session(config=config) as sess:
+        
+        # Run the initialization
+        sess.run(init)
+        minibatches = random_mini_batches(X_train, Y_train, minibatch_size)
+        # Do the training loop
+        for epoch in range(num_epochs):
+
+            minibatch_cost = 0.
+            num_minibatches = int(m / minibatch_size) # number of minibatches of size minibatch_size in the train set
+
+            for minibatch in minibatches[0:math.floor(holdout*num_minibatches)]:
+
+                # Select a minibatch
+                #(minibatch_X, minibatch_Y) = minibatch
+                # IMPORTANT: The line that runs the graph on a minibatch.
+                # Run the session to execute the optimizer and the cost, the feedict should contain a minibatch for (X,Y).
+                ### START CODE HERE ### (1 line)
+                _ , temp_cost = sess.run([optimizer, cost], feed_dict={X:minibatch[0],Y:minibatch[1]})
+                ## END CODE HERE ###
+                
+                minibatch_cost += temp_cost / num_minibatches
+                
+            #_ , minibatch_cost = sess.run([optimizer, cost], feed_dict={X:X_train.reshape(np.append(X_train.shape,1)),Y:Y_train})
+            # Print the cost every epoch
+            if print_cost == True and epoch % 5 == 0:
+                print ("Cost after epoch %i: %f" % (epoch, minibatch_cost))
+            if print_cost == True and epoch % 1 == 0:
+                costs.append(minibatch_cost)
+        
+        
+        # plot the cost
+        plt.plot(np.squeeze(costs))
+        plt.ylabel('cost')
+        plt.xlabel('iterations (per tens)')
+        plt.title("Learning rate =" + str(learning_rate))
+        plt.show()
+
+        # Calculate the correct predictions
+        predict_op = tf.argmax(Z5, 1)
+        correct_prediction = tf.equal(predict_op, tf.argmax(Y, 1))
+        
+        # Calculate accuracy on the test set
+        accuracy = tf.reduce_mean(tf.cast(correct_prediction, "float"))
+        
+        
+        print(accuracy)
+        
+        m = X_train.shape[0]
+        num_minibatches = int(m / minibatch_size)
+        train_accuracy = []
+        for minibatch in minibatches[math.floor(holdout*num_minibatches):len(minibatches)]:
+            train_accuracy.append(accuracy.eval({X: minibatch[0], Y: minibatch[1]}))
+        
+        print("Accuracy:", np.average(train_accuracy))
+        params = sess.run(parameters)
+        #print("Test Accuracy:", np.average(test_accuracy))
+        #train_accuracy = 0        
+        return train_accuracy, params
+
+acc, params = model(X_train, Y_train,0.5)
+f=open('params.pckl', 'wb')
+pickle.dump(params, f)
+f.close()
