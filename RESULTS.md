@@ -81,5 +81,27 @@ Cost after epoch 45: 0.000204
 Tensor("Mean_1:0", shape=(), dtype=float32)
 Accuracy: 0.997622
 
-Improvements: None - Close to Perfect Accuracy, increasing layers hurt accuracy. look at other CNN architechtures and see what's wrong
+Improvements:Close to Perfect Accuracy, increasing layers hurt accuracy. look at other CNN architechtures and see what's wrong
 Parameters saved as: Result4/params.pckl
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+###Result 5:
+Dataset Used: MIT CBCL (Train only), randomized 50% holdout validation
+Algorithm used: ConvNet (4 conv layers: W1 [3,3,1,8], W2 [3,3,8,16], W3[3,3,16,32], W4[3,3,32,32] 50 epochs, 32 mini batch) 
+Program file: Result5/ConvNet.py
+
+Cost after epoch 0: 0.801217
+Cost after epoch 5: 0.000152
+Cost after epoch 10: 0.000052
+Cost after epoch 15: 0.000028
+Cost after epoch 20: 0.000018
+Cost after epoch 25: 0.000012
+Cost after epoch 30: 0.000009
+Cost after epoch 35: 0.000007
+Cost after epoch 40: 0.000005
+Cost after epoch 45: 0.000004
+Tensor("Mean_1:0", shape=(), dtype=float32)
+Accuracy: 1.0
+
+Improvements: None - Perfect Accuracy, increasing layers didnt affect accuracy. look at other CNN architechtures and try 
+Parameters saved as: Result5/params.pckl
+
