@@ -146,4 +146,24 @@ Accuracy: 0.998291
 
 Improvements:Close to Perfect Accuracy, marginal increase in accuracy but cost function is getting lower. going to further increase filter size and start with UMist dataset
 Parameters saved as: Result7/params.pckl
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+###Result 8:
+Dataset Used: Yale B, randomized 50% holdout validation
+Algorithm used: ConvNet (4 conv layers: W1 [5,5,1,8], W2 [5,5,8,16], W3[5,5,16,32], W4[5,5,32,32], 2 FC layer:(FC1: 1024 neurons with dropout = 0.4, FC2: 10 neurons for 10 classes), 50 epochs, 32 mini batch) 
+Program file: Result7/ConvNet.py (just change 3x3 to 5x5 in all)
 
+Cost after epoch 0: 1.116897
+Cost after epoch 5: 0.032055
+Cost after epoch 10: 0.012570
+Cost after epoch 15: 0.035283
+Cost after epoch 20: 0.000905
+Cost after epoch 25: 0.000746
+Cost after epoch 30: 0.000749
+Cost after epoch 35: 0.000752
+Cost after epoch 40: 0.000749
+Cost after epoch 45: 0.000740
+Tensor("Mean_1:0", shape=(), dtype=float32)
+Accuracy: 0.998291
+
+Improvements:Close to Perfect Accuracy, no increase in accuracy but cost function is getting higher.
+Parameters saved as: Result8/params.pckl
