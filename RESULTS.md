@@ -167,3 +167,24 @@ Accuracy: 0.998291
 
 Improvements:Close to Perfect Accuracy, no increase in accuracy but cost function is getting higher.
 Parameters saved as: Result8/params.pckl
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+###Result 9:
+Dataset Used: UMIST, randomized 50% holdout validation
+Algorithm used: ConvNet (4 conv layers: W1 [5,5,1,8], W2 [5,5,8,16], W3[5,5,16,32], W4[5,5,32,32], 2 FC layer:(FC1: 1024 neurons with dropout = 0.4, FC2: 10 neurons for 10 classes), 50 epochs, 32 mini batch) 
+Program file: Result9/ConvNet.py
+
+Cost after epoch 0: 1.454234
+Cost after epoch 5: 1.020982
+Cost after epoch 10: 0.674410
+Cost after epoch 15: 0.492433
+Cost after epoch 20: 0.243030
+Cost after epoch 25: 0.128847
+Cost after epoch 30: 0.157627
+Cost after epoch 35: 0.058738
+Cost after epoch 40: 0.058883
+Cost after epoch 45: 0.009984
+Tensor("Mean_1:0", shape=(), dtype=float32)
+Accuracy: 0.82
+
+Improvements:Low Accuracy, train longer
+Parameters saved as: Result9/params.pckl
