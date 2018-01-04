@@ -188,3 +188,63 @@ Accuracy: 0.82
 
 Improvements:Low Accuracy, train longer
 Parameters saved as: Result9/params.pckl
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+###Result 10
+Dataset Used: UMIST, randomized 50% holdout validation
+Algorithm used: ConvNet (4 conv layers: W1 [5,5,1,8], W2 [5,5,8,16], W3[5,5,16,32], W4[5,5,32,32], 2 FC layer:(FC1: 1024 neurons with dropout = 0.4, FC2: 10 neurons for 10 classes), 75 epochs, 32 mini batch) 
+Program file: Result9/ConvNet.py
+
+Cost after epoch 0: 1.452676
+Cost after epoch 5: 0.952903
+Cost after epoch 10: 0.714621
+Cost after epoch 15: 0.314862
+Cost after epoch 20: 0.225411
+Cost after epoch 25: 0.055632
+Cost after epoch 30: 0.107403
+Cost after epoch 35: 0.082473
+Cost after epoch 40: 0.035992
+Cost after epoch 45: 0.004037
+Cost after epoch 50: 0.000126
+Cost after epoch 55: 0.000090
+Cost after epoch 60: 0.000073
+Cost after epoch 65: 0.000061
+Cost after epoch 70: 0.000052
+Tensor("Mean_1:0", shape=(), dtype=float32)
+Accuracy: 0.88
+
+Improvements:Low Accuracy, train longer
+~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+###Result 11
+Dataset Used: UMIST, randomized 50% holdout validation
+Algorithm used: ConvNet (4 conv layers: W1 [5,5,1,8], W2 [5,5,8,16], W3[5,5,16,32], W4[5,5,32,32], 2 FC layer:(FC1: 1024 neurons with dropout = 0.4, FC2: 21 neurons for 21 classes), 120 epochs, 32 mini batch) learning rate = 0.003
+Program file: Result11/ConvNet.py
+
+Cost after epoch 0: 1.428947
+Cost after epoch 5: 1.030099
+Cost after epoch 10: 0.519338
+Cost after epoch 15: 0.207566
+Cost after epoch 20: 0.331442
+Cost after epoch 25: 0.102161
+Cost after epoch 30: 0.030378
+Cost after epoch 35: 0.067521
+Cost after epoch 40: 0.026794
+Cost after epoch 45: 0.099165
+Cost after epoch 50: 0.058770
+Cost after epoch 55: 0.001918
+Cost after epoch 60: 0.000388
+Cost after epoch 65: 0.000258
+Cost after epoch 70: 0.000192
+Cost after epoch 75: 0.000148
+Cost after epoch 80: 0.000117
+Cost after epoch 85: 0.000095
+Cost after epoch 90: 0.000079
+Cost after epoch 95: 0.000067
+Cost after epoch 100: 0.000057
+Cost after epoch 105: 0.000050
+Cost after epoch 110: 0.000044
+Cost after epoch 115: 0.000039
+Tensor("Mean_1:0", shape=(), dtype=float32)
+Accuracy: 0.975
+
+Improvements:Low Accuracy, train longer
+Parameters saved as: Result11/params.pckl
