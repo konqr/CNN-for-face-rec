@@ -246,5 +246,5 @@ Cost after epoch 115: 0.000111
 Tensor("Mean_1:0", shape=(), dtype=float32)
 Accuracy: 0.975
 
-Improvements:Low Accuracy, train longer
+Improvements: Good Accuracy
 Parameters saved as: Result11/params.pckl
